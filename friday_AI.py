@@ -7,7 +7,7 @@ import webbrowser
 import os
 import random
 import smtplib
-import ano_det
+import connections as ano_det
 import time
 from threading import Thread
 
