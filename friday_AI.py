@@ -1,15 +1,16 @@
 
-import pyttsx3
-import datetime
+import pyttsx3   
+import datetime 
 import speech_recognition as sr
 import wikipedia
-import webbrowser
+import webbrowser 
 import os
 import random
 import smtplib
 import connections as ano_det
 import time
 from threading import Thread
+
 
 class CountdownTask:
       
@@ -75,32 +76,32 @@ def sendmail(to, content):
 def forQuery():
       query = takecommand().lower()
         
-      if "Wikipedia" in query:
+      if "wikipedia" in query:
             speak("Searching wikipedia...")
             query.replace("wikipedia","")
-            results = wikipedia.summary(query, sentences = 1 )
+            results = wikipedia.summary(query, sentences = 2)
             speak("According to wikipedia")
-            print(results)
+            print(results.encode("utf-8"))
             speak(results)
             return 0
       
       elif "open YouTube" in query:
-            webbrowser.open("youtube.com")
+            webbrowser.open("https://youtube.com",new=2)
             return 0
       
       elif "open stackoverflow" in query:
-            webbrowser.open("stackoverflow")
+            webbrowser.open("https://stackoverflow.com",new=2)
             return 0
       
       elif "open Google" in query:
-            webbrowser.open("google.com")
+            webbrowser.open("https://google.com",new=2)
             return 0
       
       elif "play music" in query:
-            music_dir = "E:\\movies\\Boruto_ Naruto Next Generations OP_Opening 9 Full『Gamushara』by CHiCO with HoneyWorks(MP3_320K).mp3"
+            music_dir = "E:\movies"
             songs = os.listdir(music_dir)
             #print(songs)
-            a = random.randint(1,147)
+            a = random.randint(1,3)
             os.startfile(os.path.join(music_dir, songs[a]))
             return 0
       
@@ -150,6 +151,10 @@ def forQuery():
            """ To run security if light is on or not """
            print("Running the security protocol")
            speak("Running the security protocol")
+           print("Initiating and deploying PIR motion sensor")
+           print("Running the LDR Sensor to capture anamolity")
+           speak("Initiating and deploying PIR motion sensor")
+           speak("Running the LDR Sensor to capture anamolity")
            thread1.start()
            return 0
       

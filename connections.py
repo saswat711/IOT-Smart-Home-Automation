@@ -1,7 +1,8 @@
 import conf,requests, json, time, math, statistics
 from boltiot import Sms, Bolt
 import CheckLight as cl
-import pyfirmata
+
+
 
 def compute_bounds(history_data,frame_size,factor):
     if len(history_data)<frame_size :
@@ -26,20 +27,49 @@ def trigger_webhook(message):
 
 mybolt = Bolt(conf.API_KEY, conf.DEVICE_ID)
 history_data=[]
-board = pyfirmata.Arduino('COM3')
+
+pir_pin = 7
+res1 = mybolt.serialBegin(9600)
 ledPin = 4
 
 def runSecAlert():
+
  """ To check light intensity if some one had turn on or not"""
- while True:
+ """ Also to check for intruder using PIR sensor"""
+ while True:   
+    #sending command to arduino to get serial data
+    mybolt.serialWrite("GetPirData")
     
+    Piresponse = mybolt.serialRead(7)
+    data = json.loads(Piresponse)
+    if data['success'] != 1:
+        print("There was an error while retriving the pir data.")
+        print("This is the pir error:"+data['value'])
+        continue
+
+    print ("This is the pir value "+data['value'])
+    try:
+
+        pirVal = data['value'].split(",")[0]
+        print ("After Split pir "+pirVal)
+        if pirVal == " 1":
+            pirVal = True
+        else:
+            pirVal = False    
+    except e:
+        print("There was an error while parsing the pir response: ",e)
+        continue
+
+    print(pirVal," is the final pir val \n \n")
+    if pirVal:
+        response = trigger_webhook("Intruder detected")
+    time.sleep(10)
+    # FOR LDR
     response = mybolt.analogRead('A0')
     data = json.loads(response)
-   
     if data['success'] != 1:
         print("There was an error while retriving the data.")
         print("This is the error:"+data['value'])
-        time.sleep(10)
         continue
 
     print ("This is the value "+data['value'])
@@ -77,7 +107,7 @@ def runSecAlert():
 
 def toCheckLight():
     """ to check if light is on or not """   
-    if cl.light:
+    if cl.Readlight():
         return True
     else:
         return False
@@ -85,10 +115,10 @@ def toCheckLight():
 def toSwitchLight(check):   
   if check:
     """ Turn on the light """
-    cl.light = True
-    board.digital[ledPin].write(1)
-     
+    cl.Writelight(True)
+    mybolt.serialWrite("LED_ON")
+
   else:
     """ Turn off the light """ 
-    cl.light = False
-    board.digital[ledPin].write(0)
+    cl.Writelight(False)
+    mybolt.serialWrite("LED_OFF")
