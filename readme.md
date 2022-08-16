@@ -2,7 +2,7 @@
 
 ** In this project we are trying create a smart home system, which can be control over voice command by our own
 virtual assistant we will create. The smart home system have intrusion detection, Light and Temperature checking, E.T.C **
-![Smart Home Preview](https://github.com/saswat711/Air-Quality-Measurement/blob/main/smart%20home%20preview%20image.jpeg?raw=true)
+![Smart Home Preview](https://github.com/saswat711/IOT-Smart-Home-Automation/blob/main/smart%20home%20preview%20image.jpeg?raw=true)
 
 # Software Used:
 Arduino IDE
